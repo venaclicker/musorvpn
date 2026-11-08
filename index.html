@@ -50,6 +50,21 @@ ol p{color:#46584c;max-width:34rem}
 footer{padding:2rem 1.25rem 3rem;color:#46584c;font-size:.95rem}
 footer .wrap{display:flex;flex-wrap:wrap;gap:.75rem 2rem;justify-content:space-between}
 
+.get .card{background:var(--paper);border:2px solid var(--bin);border-radius:.6rem;padding:1.5rem;max-width:40rem;display:grid;gap:.75rem}
+.get label{font-weight:600}
+.get .row{display:flex;gap:.6rem;flex-wrap:wrap}
+.get input{flex:1 1 14rem;min-width:0;font:inherit;padding:.8em 1em;border:2px solid var(--bin);border-radius:.4rem;background:#fff;color:var(--text)}
+.get .btn{margin-top:0;border:0;cursor:pointer;font:inherit;font-weight:600}
+.get .sm{padding:.8em 1.3em}
+.get #msg{min-height:1.5em;color:#46584c}
+.get #result{display:grid;gap:.75rem}
+.get .open{font-weight:600}
+.get .note{color:#46584c;font-size:.95rem}
+.get form{display:grid;gap:.6rem}
+.get .tabs{display:flex;gap:.5rem;margin-bottom:.25rem}
+.get .tab{font:inherit;font-weight:600;cursor:pointer;padding:.5em 1.1em;border:2px solid var(--bin);border-radius:.4rem;background:transparent;color:var(--text)}
+.get .tab[aria-pressed="true"]{background:var(--bin);color:var(--signal)}
+.get .link{font:inherit;background:none;border:0;padding:0 0 0 .6rem;cursor:pointer;text-decoration:underline;color:inherit}
 @media (prefers-reduced-motion:reduce){.sticker{animation:none;transform:rotate(-3deg)}html{scroll-behavior:auto}}
 </style>
 </head>
@@ -59,7 +74,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:.75rem 2rem;justify-content:space-b
   <div class="wrap">
     <span class="sticker">пять серверов · одна подписка</span>
     <h1>Мусор <span>VPN</span></h1>
-    <p class="lead">Закрытый VPN на своих серверах. Ссылку на подписку выдаю лично, подключение занимает минуту.</p>
+    <p class="lead">Закрытый VPN на своих серверах. Создайте аккаунт, введите промокод и получите подписку за минуту.</p>
     <a class="btn" href="https://t.me/venaclicker">Написать в Telegram</a>
   </div>
 </header>
@@ -74,14 +89,53 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:.75rem 2rem;justify-content:space-b
           <p>Бесплатное приложение для iPhone, Android, Windows и macOS. Скачайте его с <a href="https://happ.su">happ.su</a> или из магазина приложений.</p></div>
         </li>
         <li>
-          <div><strong>Получите ссылку подписки</strong>
-          <p>Напишите мне в Telegram, и я пришлю персональную ссылку. Она нигде не публикуется, не передавайте её другим.</p></div>
+          <div><strong>Зарегистрируйтесь и введите промокод</strong>
+          <p>Промокод выдаю лично, напишите мне в Telegram. Создайте аккаунт в личном кабинете ниже и введите промокод: сайт покажет вашу персональную ссылку.</p></div>
         </li>
         <li>
           <div><strong>Добавьте подписку в Happ</strong>
           <p>Нажмите «+», выберите подписку по URL и вставьте ссылку. Затем обновите список и выберите сервер с наименьшим пингом.</p></div>
         </li>
       </ol>
+    </div>
+  </section>
+
+  <section class="slab get" id="get">
+    <div class="wrap">
+      <h2>Личный кабинет</h2>
+      <div class="card">
+        <form id="authForm">
+          <div class="tabs">
+            <button type="button" class="tab" id="tabLogin" aria-pressed="true">Вход</button>
+            <button type="button" class="tab" id="tabReg" aria-pressed="false">Регистрация</button>
+          </div>
+          <label for="user">Логин</label>
+          <input id="user" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="латиница, цифры, _">
+          <label for="pass">Пароль</label>
+          <input id="pass" type="password" autocomplete="current-password" placeholder="от 8 символов">
+          <button class="btn sm" id="authBtn" type="submit">Войти</button>
+        </form>
+        <div id="panel" hidden>
+          <p>Вы вошли как <strong id="who"></strong><button class="link" id="logout" type="button">Выйти</button></p>
+          <form id="promoForm">
+            <label for="promo">Промокод</label>
+            <div class="row">
+              <input id="promo" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="MUSOR-XXXXXXXX">
+              <button class="btn sm" type="submit">Активировать</button>
+            </div>
+          </form>
+          <div id="result" hidden>
+            <label for="url">Ваша ссылка подписки</label>
+            <div class="row">
+              <input id="url" readonly>
+              <button class="btn sm" type="button" id="copy">Скопировать</button>
+            </div>
+            <a id="openLink" class="open" href="#">Открыть в Happ</a>
+            <p class="note">Ссылка личная, не передавайте её другим.</p>
+          </div>
+        </div>
+        <p id="msg" role="status" aria-live="polite"></p>
+      </div>
     </div>
   </section>
 
@@ -99,5 +153,57 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:.75rem 2rem;justify-content:space-b
   </div>
 </footer>
 
+<script>
+const API="https://ВАШ-ДОМЕН.sslip.io";
+const $=id=>document.getElementById(id);
+let mode='login',sid=null;
+try{sid=localStorage.getItem('musor_sid')}catch(_){}
+const store=v=>{try{v?localStorage.setItem('musor_sid',v):localStorage.removeItem('musor_sid')}catch(_){}};
+const say=t=>{$('msg').textContent=t};
+const netErr=e=>e.status?e.message:'Сервер недоступен. Попробуйте позже или напишите в Telegram.';
+async function call(path,body){
+  const h={'Content-Type':'application/json'};if(sid)h.Authorization='Bearer '+sid;
+  const r=await fetch(API+path,{method:'POST',headers:h,body:JSON.stringify(body||{})});
+  let d={};try{d=await r.json()}catch(_){}
+  if(!r.ok)throw Object.assign(new Error(d.error||'Ошибка'),{status:r.status});
+  return d;
+}
+function show(d){
+  $('authForm').hidden=true;$('panel').hidden=false;$('who').textContent=d.username;
+  const has=!!d.url;$('promoForm').hidden=has;$('result').hidden=!has;
+  if(has){$('url').value=d.url;$('openLink').href='happ://add/'+d.url}
+}
+function leave(){sid=null;store(null);$('panel').hidden=true;$('authForm').hidden=false;$('result').hidden=true}
+function setMode(m){
+  mode=m;$('authBtn').textContent=m==='login'?'Войти':'Зарегистрироваться';
+  $('tabLogin').setAttribute('aria-pressed',m==='login');$('tabReg').setAttribute('aria-pressed',m==='register');
+  $('pass').autocomplete=m==='login'?'current-password':'new-password';say('');
+}
+$('tabLogin').onclick=()=>setMode('login');$('tabReg').onclick=()=>setMode('register');
+$('authForm').addEventListener('submit',async e=>{
+  e.preventDefault();say('Подождите…');
+  try{
+    const d=await call(mode==='login'?'/api/login':'/api/register',{username:$('user').value,password:$('pass').value});
+    sid=d.session;store(sid);$('pass').value='';show(d);
+    say(d.url?'Вы вошли.':'Аккаунт готов. Введите промокод, чтобы получить подписку.');
+  }catch(err){say(netErr(err))}
+});
+$('promoForm').addEventListener('submit',async e=>{
+  e.preventDefault();const code=$('promo').value.trim();
+  if(!code){say('Введите промокод.');return}
+  say('Проверяю промокод…');
+  try{
+    const d=await call('/api/redeem',{code});
+    show({username:$('who').textContent,url:d.url});
+    say(d.note||'Подписка активирована. Скопируйте ссылку и добавьте её в Happ.');
+  }catch(err){if(err.status===401)leave();say(netErr(err))}
+});
+$('logout').onclick=()=>{call('/api/logout').catch(()=>{});leave();say('Вы вышли.')};
+$('copy').onclick=async()=>{
+  try{await navigator.clipboard.writeText($('url').value);say('Ссылка скопирована.')}
+  catch(_){$('url').select();say('Выделите ссылку и скопируйте её вручную.')}
+};
+if(sid)call('/api/me').then(show).catch(()=>leave());
+</script>
 </body>
 </html>
