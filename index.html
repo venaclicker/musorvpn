@@ -154,7 +154,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:.75rem 2rem;justify-content:space-b
 </footer>
 
 <script>
-const API="https://207-175-20-209.sslip.io/";
+const API="https://207-175-20-209.sslip.io".replace(/\/+$/,"");
 const $=id=>document.getElementById(id);
 let mode='login',sid=null;
 try{sid=localStorage.getItem('musor_sid')}catch(_){}
