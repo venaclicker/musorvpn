@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мусор VPN</title>
+<meta name="description" content="Мусор VPN: пять серверов, одна подписка, подключение через Happ.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🗑️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bin:#1d3b2a;       /* бак */
+  --bin-deep:#14291d;
+  --concrete:#e6e3da;  /* бетон */
+  --paper:#f4f2ec;
+  --signal:#ffd21f;    /* сигнальный жёлтый */
+  --text:#1b2a21;
+  --display:"Unbounded","Arial Black",Impact,sans-serif;
+  --body:"Onest",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--text);background:var(--concrete);line-height:1.6;font-size:1.0625rem}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
+
+.hero{background:var(--bin);color:var(--paper);padding:clamp(2.5rem,8vw,6rem) 1.25rem clamp(3rem,9vw,7rem);overflow:hidden;position:relative}
+.wrap{max-width:62rem;margin:0 auto}
+.hero h1{font-family:var(--display);font-weight:900;font-size:clamp(3rem,14vw,9.5rem);line-height:.92;letter-spacing:-.03em}
+.hero h1 span{display:block;color:var(--signal)}
+.sticker{display:inline-block;background:var(--signal);color:var(--bin-deep);font-family:var(--display);font-weight:700;font-size:clamp(.8rem,2.4vw,1.1rem);padding:.55em 1em;transform:rotate(-3deg);margin-bottom:1.75rem;border-radius:.3rem;animation:slap .5s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes slap{from{transform:rotate(-14deg) scale(1.6);opacity:0}to{transform:rotate(-3deg) scale(1);opacity:1}}
+.lead{max-width:34rem;margin-top:1.75rem;font-size:clamp(1.05rem,2.6vw,1.3rem);color:#d6e0d8}
+.btn{display:inline-block;margin-top:2rem;background:var(--signal);color:var(--bin-deep);font-weight:600;text-decoration:none;padding:.95em 1.6em;border-radius:.5rem;font-size:1.05rem}
+.btn:hover{background:#ffe066}
+
+.slab{padding:clamp(2.5rem,7vw,5rem) 1.25rem}
+.slab h2{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,5vw,2.4rem);line-height:1.15;margin-bottom:2rem;max-width:30rem}
+ol{list-style:none;padding:0;display:grid;gap:1.25rem;max-width:40rem;counter-reset:s}
+ol li{counter-increment:s;display:grid;grid-template-columns:3rem 1fr;gap:1rem;align-items:start}
+ol li::before{content:counter(s);font-family:var(--display);font-weight:900;font-size:1.4rem;background:var(--bin);color:var(--signal);width:3rem;height:3rem;display:grid;place-items:center;border-radius:.4rem}
+ol strong{display:block;font-size:1.15rem}
+ol p{color:#46584c;max-width:34rem}
+
+.fact{background:var(--paper);padding:clamp(2rem,6vw,3.5rem) 1.25rem;border-block:2px solid var(--bin)}
+.fact p{max-width:40rem;font-size:1.15rem}
+
+footer{padding:2rem 1.25rem 3rem;color:#46584c;font-size:.95rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:.75rem 2rem;justify-content:space-between}
+
+@media (prefers-reduced-motion:reduce){.sticker{animation:none;transform:rotate(-3deg)}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="sticker">пять серверов · одна подписка</span>
+    <h1>Мусор <span>VPN</span></h1>
+    <p class="lead">Закрытый VPN на своих серверах. Ссылку на подписку выдаю лично, подключение занимает минуту.</p>
+    <a class="btn" href="https://t.me/venaclicker">Написать в Telegram</a>
+  </div>
+</header>
+
+<main>
+  <section class="slab">
+    <div class="wrap">
+      <h2>Как подключиться</h2>
+      <ol>
+        <li>
+          <div><strong>Установите Happ</strong>
+          <p>Бесплатное приложение для iPhone, Android, Windows и macOS. Скачайте его с <a href="https://happ.su">happ.su</a> или из магазина приложений.</p></div>
+        </li>
+        <li>
+          <div><strong>Получите ссылку подписки</strong>
+          <p>Напишите мне в Telegram, и я пришлю персональную ссылку. Она нигде не публикуется, не передавайте её другим.</p></div>
+        </li>
+        <li>
+          <div><strong>Добавьте подписку в Happ</strong>
+          <p>Нажмите «+», выберите подписку по URL и вставьте ссылку. Затем обновите список и выберите сервер с наименьшим пингом.</p></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="fact">
+    <div class="wrap">
+      <p>Если сервер стал медленным, обновите подписку и выберите другой. Если ничего не помогает, напишите в Telegram, и я посмотрю.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Мусор VPN</span>
+    <a href="https://t.me/venaclicker">Поддержка: @venaclicker</a>
+  </div>
+</footer>
+
+</body>
+</html>
